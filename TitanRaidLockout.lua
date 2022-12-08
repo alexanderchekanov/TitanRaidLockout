@@ -95,6 +95,16 @@ local LOCALIZED_WOTLK_RAID_NAMES = {
     ["RS"] = GetRealZoneText(724)
 }
 
+local LOCALIZED_SPECIAL_NAMES = {
+    ["ZG"] = LOCALIZED_CLASSIC_RAID_NAMES["ZG"],
+    ["MC"] = LOCALIZED_CLASSIC_RAID_NAMES["MC"],
+    ["SEH"] = LOCALIZED_TBC_HEROIC_NAMES["SEH"],
+    ["KARA"] = LOCALIZED_TBC_RAID_NAMES["KARA"],
+    ["TK"] = LOCALIZED_TBC_RAID_NAMES["TK"],
+    ["UP"] = LOCALIZED_WOTLK_HEROIC_NAMES["UP"],
+    ["VoA10"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 10",
+    ["VoA25"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 25"
+}
 
 local LOCALIZED_WOTLK_RAID_NAMES_10 = {}
 for k, v in pairs(LOCALIZED_WOTLK_RAID_NAMES) do
@@ -165,6 +175,7 @@ function TRaidLockout_OnLoad(self)
             ShowAllCharacters = false,
             ShowUnlockedButton = false,
             ShowHeroicsButton = true,
+            ShowSpecialButton = false,
             ShowUnlockedTooltip = false,
             ShowClassicRaidsInTooltip = true,
             ShowTBCRaidsInTooltip = true,
@@ -256,6 +267,15 @@ function TitanPanelRightClickMenu_PrepareTitanRaidLockoutMenu()
                 TitanPanelPluginHandle_OnUpdate({TITAN_RAIDLOCKOUT_ID, 1})
             end
             info.checked = TitanGetVar(TITAN_RAIDLOCKOUT_ID, "ShowHeroicsButton")
+            L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"])
+
+            info = {};
+            info.text = L["ShowSpecial"];
+            info.func = function()
+                TitanToggleVar(TITAN_RAIDLOCKOUT_ID, "ShowSpecialButton")
+                TitanPanelPluginHandle_OnUpdate({TITAN_RAIDLOCKOUT_ID, 1})
+            end
+            info.checked = TitanGetVar(TITAN_RAIDLOCKOUT_ID, "ShowSpecialButton")
             L_UIDropDownMenu_AddButton(info, _G["L_UIDROPDOWNMENU_MENU_LEVEL"])
 
         end
@@ -423,6 +443,7 @@ function TRaidLockout_SetButtonText()
     local numSaved = GetNumSavedInstances()
     local coloredText = TitanGetVar(TITAN_RAIDLOCKOUT_ID, "ShowColoredText")
     local showUnlocked = TitanGetVar(TITAN_RAIDLOCKOUT_ID, "ShowUnlockedButton")
+    local showSpecial = TitanGetVar(TITAN_RAIDLOCKOUT_ID, "ShowSpecialButton")
     local showHeroics = TitanGetVar(TITAN_RAIDLOCKOUT_ID, "ShowHeroicsButton")
     buttonLabel = L["Lockout: "]
     buttonText = TitanUtils_Ternary(coloredText, COLOR.orange, COLOR.white)
@@ -459,7 +480,18 @@ function TRaidLockout_SetButtonText()
         ["TOC"] = {L["TOC"], false},
         ["RS"] = {L["RS"], false}
     }
-
+    
+    local specialsTable = {
+        ["ZG"] = {L["ZG"], false},
+        ["MC"] = {L["MC"], false},
+        ["SEH"] = {L["SEH"], false},
+        ["KARA"] = {L["KARA"], false},
+        ["TK"] = {L["TK"], false},
+        ["UP"] = {L["UP"], false},
+        ["VoA10"] = {L["VoA10"], false},
+        ["VoA25"] = {L["VoA25"], false},
+    }
+    local specialsOrdered = {"SEH", "UP", "ZG", "MC", "KARA", "TK", "VoA10", "VoA25"}
     
     local raidsTableWoTLK10 = {}
     for k, v in pairs(raidsTableWoTLK) do
@@ -550,7 +582,38 @@ function TRaidLockout_SetButtonText()
             end
         end
 
-    else -- Don't show green abbr
+    else 
+        -- First show unlocked specials
+        if showSpecial then
+            buttonText = buttonText .. COLOR.green 
+            for savedIndex = 1, numSaved do
+                local name, _, _, difficulty = GetSavedInstanceInfo(savedIndex)
+    
+                if (name == "Vault of Archavon") then
+                    if difficulty == 3 then name = name .. " 10" end
+                    if difficulty == 4 then name = name .. " 25" end
+                end
+                
+                if TitanUtils_TableContainsValue(LOCALIZED_SPECIAL_NAMES, name) then
+                    for key, subTable in pairs(specialsTable) do
+                        if name == LOCALIZED_SPECIAL_NAMES[key] then
+                            subTable[2] = true
+                        end
+                    end
+                end                                      
+            end       
+            
+            
+            for _,val in pairs(specialsOrdered) do
+                local subTable = specialsTable[val]
+                if not subTable[2] then
+                    buttonText = buttonText .. " " .. subTable[1]
+                end
+            end
+                      
+            
+        end
+        
         if numSaved > 0 then
             -- Loop thru all saved instances, check if this instance in the loop is a Heroic Dungeon
             if showHeroics then
