@@ -488,8 +488,8 @@ function TRaidLockout_SetButtonText()
         ["KARA"] = {L["KARA"], false},
         ["TK"] = {L["TK"], false},
         ["UP"] = {L["UP"], false},
-        ["VoA10"] = {L["VoA10"], false},
-        ["VoA25"] = {L["VoA25"], false},
+        ["VoA10"] = {L["VoA"], false},
+        ["VoA25"] = {L["VoA"], false},
     }
     local specialsOrdered = {"SEH", "UP", "ZG", "MC", "KARA", "TK", "VoA10", "VoA25"}
     
