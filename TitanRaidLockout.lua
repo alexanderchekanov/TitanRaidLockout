@@ -83,6 +83,7 @@ local LOCALIZED_TBC_RAID_NAMES = {
     ["ZA"] = GetRealZoneText(568),
     ["SUN"] = GetRealZoneText(580)
 }
+
 local LOCALIZED_WOTLK_RAID_NAMES = {
     ["ONY"] = GetRealZoneText(249),
     ["NAXX"] = GetRealZoneText(533),
@@ -138,6 +139,18 @@ for k, v in pairs(LOCALIZED_WOTLK_RAID_NAMES_10) do
 end
 for k, v in pairs(LOCALIZED_WOTLK_RAID_NAMES_25) do
     LOCALIZED_ALL_RAID_NAMES[k] = v
+end
+
+-- Collect all legacy into one table
+local LOCALIZED_LEGACY_NAMES = {}
+for k, v in pairs(LOCALIZED_CLASSIC_RAID_NAMES) do
+    LOCALIZED_LEGACY_NAMES[k] = v
+end
+for k, v in pairs(LOCALIZED_TBC_RAID_NAMES) do
+    LOCALIZED_LEGACY_NAMES[k] = v
+end
+for k, v in pairs(LOCALIZED_TBC_HEROIC_NAMES) do
+    LOCALIZED_LEGACY_NAMES[k] = v
 end
 
 local LOCKOUT_DATA = {}
@@ -488,9 +501,21 @@ function TRaidLockout_SetButtonText()
         ["KARA"] = {L["KARA"], false},
         ["TK"] = {L["TK"], false},
         ["UP"] = {L["UP"], false},
-        ["VoA10"] = {L["VoA"], false},
-        ["VoA25"] = {L["VoA"], false},
+        ["VoA10"] = {L["VoA10"], false},
+        ["VoA25"] = {L["VoA25"], false},
     }
+    
+    local legacyTable = {}
+    for k, v in pairs(LOCALIZED_CLASSIC_RAID_NAMES) do
+        legacyTable[k] = {L[k], false}
+    end
+    for k, v in pairs(LOCALIZED_TBC_RAID_NAMES) do
+        legacyTable[k] = {L[k], false}
+    end
+    for k, v in pairs(LOCALIZED_TBC_HEROIC_NAMES) do
+        legacyTable[k] = {L[k], false}
+    end    
+    
     local specialsOrdered = {"SEH", "UP", "ZG", "MC", "KARA", "TK", "VoA10", "VoA25"}
     
     local raidsTableWoTLK10 = {}
@@ -612,11 +637,27 @@ function TRaidLockout_SetButtonText()
             end
                       
             
-        end
+        end              
         
         if numSaved > 0 then
+            
+            -- Show all saved legacy instances
+            buttonText = buttonText .. COLOR.yellow 
+            for savedIndex = 1, numSaved do
+                local name = GetSavedInstanceInfo(savedIndex)
+                if TitanUtils_TableContainsValue(LOCALIZED_LEGACY_NAMES, name) then
+                    for key, subTable in pairs(legacyTable) do
+                        if name == LOCALIZED_LEGACY_NAMES[key] then
+                            buttonText = buttonText .. " " .. subTable[1]
+                        end
+                    end
+                end
+            end
+            
+            
             -- Loop thru all saved instances, check if this instance in the loop is a Heroic Dungeon
             if showHeroics then
+                buttonText = buttonText .. COLOR.heroic 
                 for savedIndex = 1, numSaved do
                     local name = GetSavedInstanceInfo(savedIndex)
                     if TitanUtils_TableContainsValue(LOCALIZED_WOTLK_HEROIC_NAMES, name) then
