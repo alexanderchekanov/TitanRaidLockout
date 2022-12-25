@@ -429,12 +429,17 @@ function TRaidLockout_UpdateLockoutData()
     for savedIndex = 1, numSaved do
         local name, _, reset, difficulty, _, _, _, _, _, _, numEncounters, encounterProgress, _ =
             GetSavedInstanceInfo(savedIndex)
-
-        if difficulty == 3 then
-            name = name .. " 10"
-        end
-        if difficulty == 4 then
-            name = name .. " 25"
+            
+        -- Update wotlk raid names with 10 and 25 suffixes
+        for _, wotlkName in pairs(LOCALIZED_WOTLK_RAID_NAMES) do
+            if name == wotlkName then
+                if difficulty == 3 then
+                    name = name .. " 10"
+                end
+                if difficulty == 4 then
+                    name = name .. " 25"
+                end            
+            end
         end
 
         LOCKOUT_DATA["Players"][PLAYER_REALM][PLAYER_NAME]["Lockouts"][name] = {
@@ -642,7 +647,7 @@ function TRaidLockout_SetButtonText()
         if numSaved > 0 then
             
             -- Show all saved legacy instances
-            buttonText = buttonText .. COLOR.yellow 
+            buttonText = buttonText .. COLOR.classic 
             for savedIndex = 1, numSaved do
                 local name = GetSavedInstanceInfo(savedIndex)
                 if TitanUtils_TableContainsValue(LOCALIZED_LEGACY_NAMES, name) then
@@ -719,8 +724,8 @@ function TRaidLockout_ToolTip_InstanceDataLoop(localizedInstanceTable, charData,
 
     for instanceName, instanceData in pairs(charData) do
 
-        if TitanUtils_TableContainsValue(localizedInstanceTable, instanceName) then
 
+        if TitanUtils_TableContainsValue(localizedInstanceTable, instanceName) then
             local dateToReset = TRaidLockout_UNIXTimeToDateTimeString(instanceData["Reset"])
             local encounterProgress = instanceData["Progress"]
             local numEncounters = instanceData["Encounters"]
