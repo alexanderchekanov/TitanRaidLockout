@@ -29,7 +29,7 @@ local PLAYER_REALM = GetRealmName()
 -- Init all heroic names
 local LOCALIZED_TBC_HEROIC_NAMES = {
     ["BM"] = GetRealZoneText(269),
-    ["TSH"] = GetRealZoneText(540),
+    ["SHH"] = GetRealZoneText(540),
     ["BF"] = GetRealZoneText(542),
     ["HR"] = GetRealZoneText(543),
     ["SV"] = GetRealZoneText(545),
@@ -39,7 +39,7 @@ local LOCALIZED_TBC_HEROIC_NAMES = {
     ["BOT"] = GetRealZoneText(553),
     ["MECH"] = GetRealZoneText(554),
     ["SL"] = GetRealZoneText(555),
-    ["SEH"] = GetRealZoneText(556),
+    ["SH"] = GetRealZoneText(556),
     ["MT"] = GetRealZoneText(557),
     ["AC"] = GetRealZoneText(558),
     ["OHF"] = GetRealZoneText(560),
@@ -99,7 +99,7 @@ local LOCALIZED_WOTLK_RAID_NAMES = {
 local LOCALIZED_SPECIAL_NAMES = {
     ["ZG"] = LOCALIZED_CLASSIC_RAID_NAMES["ZG"],
     ["MC"] = LOCALIZED_CLASSIC_RAID_NAMES["MC"],
-    ["SEH"] = LOCALIZED_TBC_HEROIC_NAMES["SEH"],
+    ["SH"] = LOCALIZED_TBC_HEROIC_NAMES["SH"],
     ["KARA"] = LOCALIZED_TBC_RAID_NAMES["KARA"],
     ["TK"] = LOCALIZED_TBC_RAID_NAMES["TK"],
     ["UP"] = LOCALIZED_WOTLK_HEROIC_NAMES["UP"],
@@ -502,12 +502,12 @@ function TRaidLockout_SetButtonText()
     local specialsTable = {
         ["ZG"] = {L["ZG"], false},
         ["MC"] = {L["MC"], false},
-        ["SEH"] = {L["SEH"], false},
+        ["SH"] = {L["SH"], false},
         ["KARA"] = {L["KARA"], false},
         ["TK"] = {L["TK"], false},
         ["UP"] = {L["UP"], false},
-        ["VoA10"] = {L["VoA10"], false},
-        ["VoA25"] = {L["VoA25"], false},
+        ["VoA10"] = {L["VoA"].."10", false},
+        ["VoA25"] = {L["VoA"].."25", false},
     }
     
     local legacyTable = {}
@@ -521,7 +521,7 @@ function TRaidLockout_SetButtonText()
         legacyTable[k] = {L[k], false}
     end    
     
-    local specialsOrdered = {"SEH", "UP", "ZG", "MC", "KARA", "TK", "VoA10", "VoA25"}
+    local specialsOrdered = {"SH", "UP", "ZG", "MC", "KARA", "TK", "VoA10", "VoA25"}
     
     local raidsTableWoTLK10 = {}
     for k, v in pairs(raidsTableWoTLK) do
