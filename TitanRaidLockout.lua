@@ -104,7 +104,8 @@ local LOCALIZED_SPECIAL_NAMES = {
     ["TK"] = LOCALIZED_TBC_RAID_NAMES["TK"],
     ["UP"] = LOCALIZED_WOTLK_HEROIC_NAMES["UP"],
     ["VoA10"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 10",
-    ["VoA25"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 25"
+    ["VoA25"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 25",
+    ["EoE10"] = LOCALIZED_WOTLK_RAID_NAMES["EoE"].." 10"
 }
 
 local LOCALIZED_WOTLK_RAID_NAMES_10 = {}
@@ -505,9 +506,9 @@ function TRaidLockout_SetButtonText()
         ["SH"] = {L["SH"], false},
         ["KARA"] = {L["KARA"], false},
         ["TK"] = {L["TK"], false},
-        ["UP"] = {L["UP"], false},
         ["VoA10"] = {L["VoA"].."10", false},
         ["VoA25"] = {L["VoA"].."25", false},
+        ["EoE10"] = {L["EoE"].."10", false}
     }
     
     local legacyTable = {}
@@ -521,7 +522,7 @@ function TRaidLockout_SetButtonText()
         legacyTable[k] = {L[k], false}
     end    
     
-    local specialsOrdered = {"SH", "UP", "ZG", "MC", "KARA", "TK", "VoA10", "VoA25"}
+    local specialsOrdered = {"SH", "ZG", "MC", "KARA", "TK", "VoA10", "VoA25", "EoE10"}
     
     local raidsTableWoTLK10 = {}
     for k, v in pairs(raidsTableWoTLK) do
@@ -619,7 +620,7 @@ function TRaidLockout_SetButtonText()
             for savedIndex = 1, numSaved do
                 local name, _, _, difficulty = GetSavedInstanceInfo(savedIndex)
     
-                if (name == "Vault of Archavon") then
+                if (name == "Vault of Archavon" or name == "The Eye of Eternity") then
                     if difficulty == 3 then name = name .. " 10" end
                     if difficulty == 4 then name = name .. " 25" end
                 end
