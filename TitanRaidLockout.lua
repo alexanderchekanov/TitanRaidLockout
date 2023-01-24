@@ -428,16 +428,16 @@ function TRaidLockout_UpdateLockoutData()
     -- Save character data
     LOCKOUT_DATA["Players"][PLAYER_REALM][PLAYER_NAME]["NumSaved"] = GetNumSavedInstances()
     for savedIndex = 1, numSaved do
-        local name, _, reset, difficulty, _, _, _, _, _, _, numEncounters, encounterProgress, _ =
+        local name, _, reset, _, _, _, _, _, maxPlayers, _, numEncounters, encounterProgress, _ =
             GetSavedInstanceInfo(savedIndex)
             
         -- Update wotlk raid names with 10 and 25 suffixes
         for _, wotlkName in pairs(LOCALIZED_WOTLK_RAID_NAMES) do
             if name == wotlkName then
-                if difficulty == 3 then
+                if maxPlayers == 10 then
                     name = name .. " 10"
                 end
-                if difficulty == 4 then
+                if maxPlayers == 25 then
                     name = name .. " 25"
                 end            
             end
@@ -559,9 +559,9 @@ function TRaidLockout_SetButtonText()
             end
             -- Loop again and check if this instance in the loop is a 10man Raid
             for savedIndex = 1, numSaved do
-                local name, _, _, difficulty = GetSavedInstanceInfo(savedIndex)
+                local name, _, _, _, _, _, _, _, maxPlayers = GetSavedInstanceInfo(savedIndex)
     
-                if difficulty == 3 then name = name .. " 10" end
+                if maxPlayers == 10 then name = name .. " 10" end
                 
                 if TitanUtils_TableContainsValue(LOCALIZED_ALL_RAID_NAMES, name) then
 
@@ -580,9 +580,9 @@ function TRaidLockout_SetButtonText()
             end
              -- Loop again and check if this instance in the loop is a 25man Raid
              for savedIndex = 1, numSaved do
-                local name, _, _, difficulty = GetSavedInstanceInfo(savedIndex)
+                local name, _, _, _, _, _, _, _, maxPlayers = GetSavedInstanceInfo(savedIndex)
     
-                if difficulty == 4 then name = name .. " 25" end
+                if maxPlayers == 25 then name = name .. " 25" end
                 
                 if TitanUtils_TableContainsValue(LOCALIZED_ALL_RAID_NAMES, name) then
                     for key, subTable in pairs(raidsTableWoTLK25) do
@@ -618,11 +618,11 @@ function TRaidLockout_SetButtonText()
         if showSpecial then
             buttonText = buttonText .. COLOR.green 
             for savedIndex = 1, numSaved do
-                local name, _, _, difficulty = GetSavedInstanceInfo(savedIndex)
+                local name, _, _, _, _, _, _, _, maxPlayers = GetSavedInstanceInfo(savedIndex)
     
                 if (name == "Vault of Archavon" or name == "The Eye of Eternity") then
-                    if difficulty == 3 then name = name .. " 10" end
-                    if difficulty == 4 then name = name .. " 25" end
+                    if maxPlayers == 10 then name = name .. " 10" end
+                    if maxPlayers == 25 then name = name .. " 25" end
                 end
                 
                 if TitanUtils_TableContainsValue(LOCALIZED_SPECIAL_NAMES, name) then
@@ -631,9 +631,8 @@ function TRaidLockout_SetButtonText()
                             subTable[2] = true
                         end
                     end
-                end                                      
-            end       
-            
+                end
+            end
             
             for _,val in pairs(specialsOrdered) do
                 local subTable = specialsTable[val]
@@ -641,12 +640,9 @@ function TRaidLockout_SetButtonText()
                     buttonText = buttonText .. " " .. subTable[1]
                 end
             end
-                      
-            
         end              
         
-        if numSaved > 0 then
-            
+        if numSaved > 0 then            
             -- Show all saved legacy instances
             buttonText = buttonText .. COLOR.classic 
             for savedIndex = 1, numSaved do
@@ -658,8 +654,7 @@ function TRaidLockout_SetButtonText()
                         end
                     end
                 end
-            end
-            
+            end            
             
             -- Loop thru all saved instances, check if this instance in the loop is a Heroic Dungeon
             if showHeroics then
@@ -681,9 +676,9 @@ function TRaidLockout_SetButtonText()
             end
             -- Loop again and check if this instance in the loop is a 10man Raid
             for savedIndex = 1, numSaved do
-                local name, _, _, difficulty = GetSavedInstanceInfo(savedIndex)
+                local name, _, _, _, _, _, _, _, maxPlayers = GetSavedInstanceInfo(savedIndex)
     
-                if difficulty == 3 then name = name .. " 10" end
+                if maxPlayers == 10 then name = name .. " 10" end
 
                 if TitanUtils_TableContainsValue(LOCALIZED_ALL_RAID_NAMES, name) then
                     for key, subTable in pairs(raidsTableWoTLK10) do
@@ -699,9 +694,9 @@ function TRaidLockout_SetButtonText()
             end
             -- Loop again and check if this instance in the loop is a 25man Raid
             for savedIndex = 1, numSaved do
-                local name, _, _, difficulty = GetSavedInstanceInfo(savedIndex)
+                local name, _, _, _, _, _, _, _, maxPlayers = GetSavedInstanceInfo(savedIndex)
     
-                if difficulty == 4 then name = name .. " 25" end
+                if maxPlayers == 25 then name = name .. " 25" end
 
                 if TitanUtils_TableContainsValue(LOCALIZED_ALL_RAID_NAMES, name) then
                     for key, subTable in pairs(raidsTableWoTLK25) do
