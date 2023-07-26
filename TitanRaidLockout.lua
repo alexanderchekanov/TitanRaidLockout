@@ -98,13 +98,9 @@ local LOCALIZED_WOTLK_RAID_NAMES = {
 
 local LOCALIZED_SPECIAL_NAMES = {
     ["ZG"] = LOCALIZED_CLASSIC_RAID_NAMES["ZG"],
-    ["MC"] = LOCALIZED_CLASSIC_RAID_NAMES["MC"],
-    ["SH"] = LOCALIZED_TBC_HEROIC_NAMES["SH"],
     ["KARA"] = LOCALIZED_TBC_RAID_NAMES["KARA"],
-    ["UP"] = LOCALIZED_WOTLK_HEROIC_NAMES["UP"],
-    ["VoA10"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 10",
-    ["VoA25"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 25",
-    ["EoE10"] = LOCALIZED_WOTLK_RAID_NAMES["EoE"].." 10"
+    --["VoA10"] = LOCALIZED_WOTLK_RAID_NAMES["VoA"].." 10",
+    --["EoE10"] = LOCALIZED_WOTLK_RAID_NAMES["EoE"].." 10"
 }
 
 local LOCALIZED_WOTLK_RAID_NAMES_10 = {}
@@ -501,12 +497,9 @@ function TRaidLockout_SetButtonText()
     
     local specialsTable = {
         ["ZG"] = {L["ZG"], false},
-        ["MC"] = {L["MC"], false},
-        ["SH"] = {L["SH"], false},
         ["KARA"] = {L["KARA"], false},
-        ["VoA10"] = {L["VoA"].."10", false},
-        ["VoA25"] = {L["VoA"].."25", false},
-        ["EoE10"] = {L["EoE"].."10", false}
+        --["VoA10"] = {L["VoA"].."10", false},
+        --["EoE10"] = {L["EoE"].."10", false}
     }
     
     local legacyTable = {}
@@ -520,7 +513,7 @@ function TRaidLockout_SetButtonText()
         legacyTable[k] = {L[k], false}
     end    
     
-    local specialsOrdered = {"SH", "ZG", "MC", "KARA", "VoA10", "VoA25", "EoE10"}
+    local specialsOrdered = {"ZG","KARA"}
     
     local raidsTableWoTLK10 = {}
     for k, v in pairs(raidsTableWoTLK) do
